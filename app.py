@@ -5,6 +5,8 @@ import requests
 XOXB_TOKEN = os.environ['SLACK_XOXB_TOKEN']
 app = Flask(__name__)
 
+tasks = []
+
 def post_message(channel, text, **kwargs):
     ep = 'https://slack.com/api/chat.postMessage'
     headers = {
@@ -35,7 +37,8 @@ def root():
     event = data['event']
     print(event)
     if 'bot_id' not in event:
-        post_message("CQXNR9H6D", event['text']) 
+        tasks.append(event['text'])
+        post_message("CQXNR9H6D", '\n'.join(tasks)) 
     return '', 200
 
 if __name__ == "__main__":
