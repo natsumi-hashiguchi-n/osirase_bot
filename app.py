@@ -1,9 +1,21 @@
 from flask import Flask, request
 import os
+import requests
 
 XOXB_TOKEN = os.environ['SLACK_XOXB_TOKEN']
 app = Flask(__name__)
 
+def post_message(channel, text, **kwargs):
+    ep = 'https://slack.com/api/chat.postMessage'
+    headers = {
+        'Authorization': 'Bearer ' + XOXB_TOKEN
+    }
+    payload = {
+        'channel': channel,
+        'text': text,
+    }
+    payload.update(kwargs)
+    return requests.post(ep, json=payload, headers=headers)
 
 @app.route('/', methods=['POST'])
 def root():
@@ -22,7 +34,8 @@ def root():
 
     event = data['event']
     print(event)
-
+    if 'bot_id' not in event:
+        post_message("CQXNR9H6D", event['text']) 
     return '', 200
 
 if __name__ == "__main__":
