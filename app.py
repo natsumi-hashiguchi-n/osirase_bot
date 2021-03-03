@@ -37,8 +37,15 @@ def root():
     event = data['event']
     print(event)
     if 'bot_id' not in event:
-        tasks.append(event['text'])
-        post_message("CQXNR9H6D", '\n'.join(tasks)) 
+        parts = event['text'].split(' ')
+        command = parts[0]
+        content = ' '.join(parts[1:])
+        if command == '/notice-add':
+            tasks.append(content)
+        if command == '/notice-show':
+            post_message ("CQXNR9H6D", '\n'.join(tasks))
+        if command == '/notice-del':
+            tasks.remove(content)       
     return '', 200
 
 if __name__ == "__main__":
